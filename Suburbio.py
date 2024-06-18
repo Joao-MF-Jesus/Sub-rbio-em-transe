@@ -2,22 +2,25 @@ from tkinter import *
 from tkinter import ttk
 import tkinter.messagebox as tkmb
 import mysql.connector
+from customtkinter import *
+import customtkinter as ctk
 from mysql.connector import connect, Error
 from datetime import datetime
 import tkinter as tk
 from PIL import Image, ImageTk
 w = Tk()
 w.title("Subúrbio em Transe ")
-largura = 800
-altura = 500
+w.wm_iconbitmap('images/suburbio.ico')
+largura = 1000
+altura = 800
 largura_screen = w.winfo_screenwidth()
 altura_screen = w.winfo_screenheight()
 posx = largura_screen/2 - largura/2
 posy = altura_screen/2 - altura/2
 w.geometry('%dx%d+%d+%d' % (largura, altura, posx, posy))
-w.minsize(width=800, height=600)
+w.minsize(width=1000, height=800)
 w.resizable(False, False)
-w['bg'] = "black"
+set_appearance_mode("light")
 
 conexao = mysql.connector.connect(
                     host="localhost",
@@ -111,56 +114,6 @@ def criar_tabela_voluntario():
         cursor.close()
     except Error as e:
         mostrar_aviso(f"Erro ao criar a tabela 'Voluntario': {str(e)}")        
-        
-
-def abrir_n_j_b():
-    n_j = Toplevel(w)
-    n_j.title('Cadastro Voluntário')
-    n_j.geometry('250x600')
-    global nome_entry, email_entry, telefone_entry, data_nascimento_entry, endereco_entry, sexo_var
-
-
-    nome_label = Label(n_j, text="Nome: ")
-    nome_label.grid(row=1, column=0)
-    nome_entry = Entry(n_j)
-    nome_entry.grid(row=1, column=1)
-
-    email_label = Label(n_j, text="Email:")
-    email_label.grid(row=2, column=0)
-    email_entry = Entry(n_j)
-    email_entry.grid(row=2, column=1)
-
-    telefone_label = Label(n_j, text="Telefone:")
-    telefone_label.grid(row=3, column=0)
-    telefone_entry = Entry(n_j)
-    telefone_entry.grid(row=3, column=1)
-
-    data_nascimento_label = Label(n_j, text="Data de nascimento:")
-    data_nascimento_label.grid(row=4, column=0)
-    data_nascimento_entry = Entry(n_j)
-    data_nascimento_entry.grid(row=4, column=1)
-
-    rua_label = Label(n_j, text="Endereço:")
-    rua_label.grid(row=5, column=0)
-    endereco_entry = Entry(n_j)
-    endereco_entry.grid(row=5, column=1)
-    
-    sexo_label = Label(n_j, text="Sexo:")
-    sexo_label.grid(row=12, column=0)
-    masculino_rdb = Radiobutton(n_j, text="Masculino", variable=sexo_var, value=1)
-    masculino_rdb.grid(row=12, column=0)
-    feminino_rdb = Radiobutton(n_j, text="Feminino", variable=sexo_var, value=2)
-    feminino_rdb.grid(row=12, column=1)
-
-    voluntario_var = IntVar()
-    temporario_rdb = Radiobutton(n_j, text="Temporário", variable=voluntario_var, value=1)
-    temporario_rdb.grid(row=14, column=0)
-    fixo_rdb = Radiobutton(n_j, text="Fixo", variable=voluntario_var, value=2)
-    fixo_rdb.grid(row=14, column=1)
-    bcb_B = Button(n_j, text="Cadastrar Voluntário", command=cadastrar_voluntario)
-    bcb_B.grid(row=16, column=0)
-    criar_tabela_voluntario()
-
 
 def criar_tabela_doacao():
         try:
@@ -202,9 +155,6 @@ def sair():
     if resl == "yes":
         w.destroy()
 
-exit_B = Button(w, text="Sair", command=sair)
-exit_B.place(x=750, y=550)
-
 # Define entry variables globally
 #id_usuario_entry = None
 nome_entry = None
@@ -220,52 +170,6 @@ password_entry = None
 email_entry_u = None
 
 valor_doacao_entry = None
-
-def abrir_n_j_b():
-    global nome_entry, email_entry, telefone_entry, data_nascimento_entry, endereco_entry, sexo_var
-    n_j = Toplevel(w)
-    n_j.title('Cadastro Voluntário')
-    n_j.geometry('250x600')
-
-    nome_label = Label(n_j, text="Nome: ")
-    nome_label.grid(row=1, column=0)
-    nome_entry = Entry(n_j)
-    nome_entry.grid(row=1, column=1)
-
-    email_label_v = Label(n_j, text="Email:")
-    email_label_v.grid(row=2, column=0)
-    email_entry = Entry(n_j)
-    email_entry.grid(row=2, column=1)
-
-    telefone_label = Label(n_j, text="Telefone:")
-    telefone_label.grid(row=3, column=0)
-    telefone_entry = Entry(n_j)
-    telefone_entry.grid(row=3, column=1)
-
-    data_nascimento_label = Label(n_j, text="Data de nascimento:")
-    data_nascimento_label.grid(row=4, column=0)
-    data_nascimento_entry = Entry(n_j)
-    data_nascimento_entry.grid(row=4, column=1)
-
-    rua_label = Label(n_j, text="Endereço:")
-    rua_label.grid(row=5, column=0)
-    endereco_entry = Entry(n_j)
-    endereco_entry.grid(row=5, column=1)
-
-    sexo_var = IntVar()
-    sexo_label = Label(n_j, text="Sexo:")
-    sexo_label.grid(row=6, column=0)
-    masculino_rdb = Radiobutton(n_j, text="Masculino", variable=sexo_var, value=1)
-    masculino_rdb.grid(row=6, column=1)
-    feminino_rdb = Radiobutton(n_j, text="Feminino", variable=sexo_var, value=2)
-    feminino_rdb.grid(row=7, column=0)
-
-
-
-    bcb_B = Button(n_j, text="Cadastrar Voluntário", command=cadastrar_voluntario)
-    bcb_B.grid(row=10, column=0)
-    criar_tabela_voluntario()
-
 
 def cadastrar_voluntario():
     nome = nome_entry.get()
@@ -486,6 +390,7 @@ def cadastrar_doacao():
             mostrar_aviso(f"Erro ao cadastrar a doação: {str(e)}")
             if conexao.is_connected():
                 conexao.close()
+
 def ver_doacao():
     try:
         conexao = mysql.connector.connect(
@@ -874,50 +779,325 @@ def atualizar_usuario_window():
     b_atualizar_usuario = Button(window, text="Atualizar Usuário", width=20, height=2, command=atualizar_usuario)
     b_atualizar_usuario.grid(row=4, column=0, columnspan=2, pady=10)
 
-x = Menu(w)
+# FRONT --------------------------------------------------------------------------------------------------------------------------------
 
-arqvMenu = Menu(w, tearoff=0)
+sidebar_frame = CTkFrame(master=w, fg_color="#050505",  width=200, height=650, corner_radius=0)
+sidebar_frame.pack_propagate(0)
+sidebar_frame.pack(fill="y", anchor="w", side="left")
 
-arqvMenu.add_command(label='Criar Banco Usuário', command=cdb)
-arqvMenu.add_command(label='Criar Tabela Usuário', command=criar_tabela_usuario)
-arqvMenu.add_command(label='Criar Tabela Voluntário', command=criar_tabela_voluntario)
-arqvMenu.add_command(label='Criar Tabela Doação', command=criar_tabela_doacao)
+logo_img_data = Image.open("images/suburbio_logo.png")
+logo_img = CTkImage(dark_image=logo_img_data, light_image=logo_img_data, size=(180, 75.42))
 
-x.add_cascade(label='Banco de Dados', menu=arqvMenu)
+CTkButton(master=sidebar_frame, command=lambda: controller.show_frame("pagina_inicial"), text="", fg_color="transparent", hover_color="#050505", image=logo_img).pack(pady=(38, 0), anchor="center")
 
-cadsusuMenu = Menu(w, tearoff=0)
+cadastrar_img_data = Image.open("images/cadastrar.png")
+cadastrar_img = CTkImage(dark_image=cadastrar_img_data, light_image=cadastrar_img_data)
+CTkButton(master=sidebar_frame, command=lambda: controller.show_frame("cadastrar_voluntario_front"), image=cadastrar_img, text="Cadastrar Voluntário", fg_color="transparent", font=("Arial Bold", 14), hover_color="#3b3b3b", anchor="w", width=170, height=20).pack(ipady=5, pady=(38, 0))
 
-cadsusuMenu.add_command(label='Remover', command = remover_usuario_window)
-cadsusuMenu.add_command(label='Editar', command = atualizar_usuario_window)
-cadsusuMenu.add_command(label='Ver', command = ver_usuario)
+remover_img_data = Image.open("images/remover.png")
+remover_img = CTkImage(dark_image=remover_img_data, light_image=remover_img_data)
+CTkButton(master=sidebar_frame, command=lambda: controller.show_frame("remover_voluntario_front"), image=remover_img, text="Remover Voluntário", fg_color="transparent", font=("Arial Bold", 14), hover_color="#3b3b3b", anchor="w", width=170, height=20).pack(ipady=5, pady=(15, 0))
 
-x.add_cascade(label="Usuário", menu=cadsusuMenu)
+ver_img_data = Image.open("images/ver.png")
+ver_img = CTkImage(dark_image=ver_img_data, light_image=ver_img_data)
+CTkButton(master=sidebar_frame, image=ver_img, command=ver_voluntario, text="Ver Voluntários", fg_color="transparent", font=("Arial Bold", 14), hover_color="#3b3b3b", anchor="w", width=170, height=20).pack(ipady=5, pady=(15, 0))
 
-cadsMenu = Menu(w, tearoff=0)
+cadastrar_img_data2 = Image.open("images/cadastrar.png")
+cadastrar_img2 = CTkImage(dark_image=cadastrar_img_data2, light_image=cadastrar_img_data2)
+CTkButton(master=sidebar_frame, command=lambda: controller.show_frame("cadastrar_usuario_front"), image=cadastrar_img2, text="Cadastrar Usuário", fg_color="transparent", font=("Arial Bold", 14), hover_color="#3b3b3b", anchor="w", width=170, height=20).pack(ipady=5, pady=(15, 0))
 
-cadsMenu.add_command(label='Remover', command = remover_voluntario_window)
-#cadsMenu.add_command(label='Editar', command=atualizar_voluntario_window)
-cadsMenu.add_command(label='Ver', command = ver_voluntario)
+atualizar_img_data2 = Image.open("images/atualizar.png")
+atualizar_img2 = CTkImage(dark_image=atualizar_img_data2, light_image=atualizar_img_data2)
+CTkButton(master=sidebar_frame, command=lambda: controller.show_frame("atualizar_usuario_front"),image=atualizar_img2, text="Atualizar Usuário", fg_color="transparent", font=("Arial Bold", 14), hover_color="#3b3b3b", anchor="w", width=170, height=20).pack(ipady=5, pady=(15, 0))
 
-x.add_cascade(label="Voluntário", menu=cadsMenu)
+remover_img_data2 = Image.open("images/remover.png")
+remover_img2 = CTkImage(dark_image=remover_img_data2, light_image=remover_img_data2)
+CTkButton(master=sidebar_frame, command=lambda: controller.show_frame("remover_usuario_front"), image=remover_img2, text="Remover Usuário", fg_color="transparent", font=("Arial Bold", 14), hover_color="#3b3b3b", anchor="w", width=170, height=20).pack(ipady=5, pady=(15, 0))
 
-cadsMenu = Menu(w, tearoff=0)
+ver_img_data2 = Image.open("images/ver.png")
+ver_img2 = CTkImage(dark_image=ver_img_data2, light_image=ver_img_data2)
+CTkButton(master=sidebar_frame, image=ver_img2, text="Ver Usuários", command=ver_usuario, fg_color="transparent", font=("Arial Bold", 14), hover_color="#3b3b3b", anchor="w", width=170, height=20).pack(ipady=5, pady=(15, 0))
 
-cadsMenu.add_command(label='Remover', command = remover_doacao_window)
-cadsMenu.add_command(label='Ver',command = ver_doacao)
+doacao_img_data = Image.open("images/doacao.png")
+doacao_img = CTkImage(dark_image=doacao_img_data, light_image=doacao_img_data)
+CTkButton(master=sidebar_frame, command=lambda: controller.show_frame("cadastrar_doacao_front"), image=doacao_img, text="Cadastrar doação", fg_color="transparent", font=("Arial Bold", 14), hover_color="#3b3b3b", anchor="w", width=170, height=20).pack(ipady=5, pady=(15, 0))
 
-x.add_cascade(label="Doação", menu=cadsMenu)
+remover_img_data3 = Image.open("images/delete.png")
+remover_img3 = CTkImage(dark_image=remover_img_data3, light_image=remover_img_data3)
+CTkButton(master=sidebar_frame, command=lambda: controller.show_frame("remover_doacao_front"), image=remover_img3, text="Remover doação", fg_color="transparent", font=("Arial Bold", 14), hover_color="#3b3b3b", anchor="w", width=170, height=20).pack(ipady=5, pady=(15, 0))
 
-w.config(menu=x)
+ver_img_data3 = Image.open("images/ver.png")
+ver_img3 = CTkImage(dark_image=ver_img_data3, light_image=ver_img_data3)
+CTkButton(master=sidebar_frame, image=ver_img3, text="Ver doações", command=ver_doacao, fg_color="transparent", font=("Arial Bold", 14), hover_color="#3b3b3b", anchor="w", width=170, height=20).pack(ipady=5, pady=(15, 0))
+
+sair_img_data = Image.open("images/sair.png")
+sair_img = CTkImage(dark_image=sair_img_data, light_image=sair_img_data)
+CTkButton(master=sidebar_frame, command=sair, image=sair_img, text="Sair",fg_color="#3b3b3b", font=("Verdana Bold", 14), hover_color="#3b3b3b", anchor="w").pack(anchor="center", ipady=5, pady=(15, 0))
+
+# FUNÇÕES ------------------------------------------------------------------------------------------------
+
+pages_fm = CTkFrame(master=w, width=800, height=800, corner_radius=0)
+pages_fm.pack_propagate(0)
+pages_fm.pack(fill="y", anchor="w", side="right")
+
+def pagina_inicial():
+    pagina_inicial_fm = CTkFrame(master=pages_fm, width=550, height=570, fg_color='transparent')
+    pagina_inicial_fm.place(relx=0.5, rely=0.5, anchor="center")
+
+    pagina_inicial_data = Image.open("images/suburbio_logo2.png")
+    pagina_inicial_img = CTkImage(dark_image=pagina_inicial_data, light_image=pagina_inicial_data, size=(500, 400))
+
+    background_label = CTkLabel(master=pagina_inicial_fm, text="", image=pagina_inicial_img)
+    background_label.place(relx=0.5, rely=0.5, anchor="center")
+
+    botao_criar_banco = CTkButton(master=pagina_inicial_fm, text='Criar Banco Usuário', command=cdb, width=180, height=40, font=("Arial Bold", 17), hover_color="#3b3b3b", fg_color="#050505", text_color="#fff")
+    botao_criar_banco.place(x=100, y=450)
+
+    botao_criar_tabela_usuario = CTkButton(master=pagina_inicial_fm, text='Criar Tabela Usuário', command=criar_tabela_usuario, width=180, height=40, font=("Arial Bold", 17), hover_color="#3b3b3b", fg_color="#050505", text_color="#fff")
+    botao_criar_tabela_usuario.place(x=300, y=450)
+
+    botao_criar_tabela_voluntario = CTkButton(master=pagina_inicial_fm, text='Criar Tabela Voluntário', command=criar_tabela_voluntario, width=180, height=40, font=("Arial Bold", 17), hover_color="#3b3b3b", fg_color="#050505", text_color="#fff")
+    botao_criar_tabela_voluntario.place(x=100, y=500)
+
+    botao_criar_tabela_doacao = CTkButton(master=pagina_inicial_fm, text='Criar Tabela Doação', command=criar_tabela_doacao, width=180, height=40, font=("Arial Bold", 17), hover_color="#3b3b3b", fg_color="#050505", text_color="#fff")
+    botao_criar_tabela_doacao.place(x=300, y=500)
+
+    controller.add_frame("pagina_inicial", pagina_inicial_fm)
+
+def cadastrar_voluntario_front():
+
+    global nome_entry, email_entry, telefone_entry, data_nascimento_entry, endereco_entry, sexo_var
+
+    cadastrar_voluntario_pagina_fm =  CTkFrame(master=pages_fm, width=550, height=570, fg_color='transparent')
+    cadastrar_voluntario_pagina_fm.place(relx=0.5, rely=0.5, anchor="center")
+
+    nome_label = CTkLabel(master=cadastrar_voluntario_pagina_fm, text='Nome', font=("Bold", 18))
+    nome_label.place(x=55, y=50)
+    nome_entry = CTkEntry(master=cadastrar_voluntario_pagina_fm, fg_color="#F0F0F0", border_width=0,height=30, width=200)
+    nome_entry.place(x=55, y=80)
+
+    email_label = CTkLabel(master=cadastrar_voluntario_pagina_fm, text='Email', font=("Bold", 18))
+    email_label.place(x=295, y=50)
+    email_entry = CTkEntry(master=cadastrar_voluntario_pagina_fm, fg_color="#F0F0F0", border_width=0,height=30, width=200)
+    email_entry.place(x=295, y=80)
+
+    telefone_label = CTkLabel(master=cadastrar_voluntario_pagina_fm, text='Telefone', font=("Bold", 18))
+    telefone_label.place(x=55, y=130)
+    telefone_entry = CTkEntry(master=cadastrar_voluntario_pagina_fm, fg_color="#F0F0F0", border_width=0,height=30, width=200)
+    telefone_entry.place(x=55, y=160)
+
+    data_nascimento_label = CTkLabel(master=cadastrar_voluntario_pagina_fm, text='Data de nascimento', font=("Bold", 18))
+    data_nascimento_label.place(x=295, y=130)
+    data_nascimento_entry = CTkEntry(master=cadastrar_voluntario_pagina_fm, fg_color="#F0F0F0", border_width=0,height=30, width=200)
+    data_nascimento_entry.place(x=295, y=160)
+
+    rua_label = CTkLabel(master=cadastrar_voluntario_pagina_fm, text='Endereço', font=("Bold", 18))
+    rua_label.place(x=55, y=210)
+    endereco_entry = CTkEntry(master=cadastrar_voluntario_pagina_fm, fg_color="#F0F0F0", border_width=0,height=30, width=440)
+    endereco_entry.place(x=55, y=240)
+
+    sexo_label = CTkLabel(master=cadastrar_voluntario_pagina_fm, text='Sexo', font=("Bold", 18))
+    sexo_label.place(x=55, y=290)
+    sexo_var = IntVar()
+    masculino_rdb = CTkRadioButton(master=cadastrar_voluntario_pagina_fm, variable=sexo_var, value=1, text="Masculino", font=("Arial Bold", 14), fg_color="black", border_color="black", hover_color="#404040")
+    masculino_rdb.place(x=55, y=325)
+    feminino_rdb = CTkRadioButton(master=cadastrar_voluntario_pagina_fm, variable=sexo_var, value=2,text="Feminino", font=("Arial Bold", 14), fg_color="black", border_color="black", hover_color="#404040")
+    feminino_rdb.place(x=55, y=355)
+
+    botao_cadastrar_usuario = CTkButton(master=cadastrar_voluntario_pagina_fm, text='Cadastrar voluntário', command=cadastrar_voluntario, width=180, height=40, font=("Arial Bold", 17), hover_color="#3b3b3b", fg_color="#050505", text_color="#fff")
+    botao_cadastrar_usuario.place(x=175, y=430)
+    criar_tabela_voluntario()
+
+    controller.add_frame("cadastrar_voluntario_front", cadastrar_voluntario_pagina_fm)
+
+def remover_voluntario_front():
+
+    def remover_voluntario():
+        id_voluntario = entry_id_voluntario.get()
+        if id_voluntario:
+            remover_voluntario_por_id(int(id_voluntario))
+        else:
+            mostrar_aviso("Por favor, insira o ID do Voluntário.")
+
+    remover_voluntario_pagina_fm =  CTkFrame(master=pages_fm, width=550, height=570, fg_color='transparent')
+    remover_voluntario_pagina_fm.place(relx=0.5, rely=0.5, anchor="center")
+
+    remover_voluntario_label_1 = CTkLabel(master=remover_voluntario_pagina_fm, text='Insira o ID do voluntário', font=("Bold", 25))
+    remover_voluntario_label_1.place(x=142, y=200) 
+
+    entry_id_voluntario = CTkEntry(master=remover_voluntario_pagina_fm, fg_color="#F0F0F0", border_width=1, border_color="black", width=250)
+    entry_id_voluntario.place(x=150, y=250)
+
+    b_remover_voluntario = CTkButton(master=remover_voluntario_pagina_fm, command=remover_voluntario, text="Remover", width=100, font=("Arial Bold", 17), hover_color="#3b3b3b", fg_color="#050505", text_color="#fff")
+    b_remover_voluntario.place(x=220, y=300)
+
+    controller.add_frame("remover_voluntario_front", remover_voluntario_pagina_fm)
+
+def cadastrar_usuario_front():
+
+    global username_entry, password_entry, email_entry
+
+    cadastrar_usuario_pagina_fm =  CTkFrame(master=pages_fm, width=550, height=570, fg_color='transparent')
+    cadastrar_usuario_pagina_fm.place(relx=0.5, rely=0.5, anchor="center")
+
+    username_label = CTkLabel(master=cadastrar_usuario_pagina_fm, text='Nome', font=("Bold", 18))
+    username_label.place(x=50, y=50)
+    username_entry = CTkEntry(master=cadastrar_usuario_pagina_fm, fg_color="#F0F0F0", border_width=0,height=30, width=200)
+    username_entry.place(x=50, y=80)
+
+    password_label = CTkLabel(master=cadastrar_usuario_pagina_fm, text='Senha', font=("Bold", 18))
+    password_label.place(x=290, y=50)
+    password_entry = CTkEntry(master=cadastrar_usuario_pagina_fm, fg_color="#F0F0F0", border_width=0,height=30, width=200, show="*")
+    password_entry.place(x=290, y=80)
+
+    email_label = CTkLabel(master=cadastrar_usuario_pagina_fm, text='Email', font=("Bold", 18))
+    email_label.place(x=50, y=130)
+    email_entry = CTkEntry(master=cadastrar_usuario_pagina_fm, fg_color="#F0F0F0", border_width=0, height=30, width=440)
+    email_entry.place(x=50, y=160)
+
+    bcb_f = CTkButton(master=cadastrar_usuario_pagina_fm, command=cadastrar_usuario, text='Cadastrar usuário', width=180, height=40, font=("Arial Bold", 17), hover_color="#3b3b3b", fg_color="#050505", text_color="#fff")
+    bcb_f.place(x=170, y=220)
+    criar_tabela_usuario()
+
+    controller.add_frame("cadastrar_usuario_front", cadastrar_usuario_pagina_fm)
+
+def atualizar_usuario_front():
+
+    def atualizar_usuario():
+        id_usuario = entry_id_usuario.get()
+        novo_username = entry_novo_username.get()
+        novo_password = entry_novo_password.get()
+        novo_email = label_nova_email.get()
+
+        if id_usuario and novo_username and novo_password and novo_email:
+            atualizar_usuario_por_id(
+                int(id_usuario),
+                novo_username,
+                novo_password,
+                novo_email
+            )  # Fecha a janela após a atualização
+        else:
+            mostrar_aviso("Por favor, preencha todos os campos obrigatórios.")
+
+    atualizar_usuario_pagina_fm =  CTkFrame(master=pages_fm, width=550, height=570, fg_color='transparent')
+    atualizar_usuario_pagina_fm.place(relx=0.5, rely=0.5, anchor="center")
+
+    label_novo_username = CTkLabel(master=atualizar_usuario_pagina_fm, text='Novo nome', font=("Bold", 18))
+    label_novo_username.place(x=50, y=50)
+    entry_novo_username = CTkEntry(master=atualizar_usuario_pagina_fm, fg_color="#F0F0F0", border_width=0,height=30, width=200)
+    entry_novo_username.place(x=50, y=80)
+
+    label_novo_password = CTkLabel(master=atualizar_usuario_pagina_fm, text='Nova senha', font=("Bold", 18))
+    label_novo_password.place(x=290, y=50)
+    entry_novo_password = CTkEntry(master=atualizar_usuario_pagina_fm, fg_color="#F0F0F0", border_width=0,height=30, width=200, show="*")
+    entry_novo_password.place(x=290, y=80)
+
+    label_nova_email = CTkLabel(master=atualizar_usuario_pagina_fm, text='Novo email', font=("Bold", 18))
+    label_nova_email.place(x=50, y=130)
+    label_nova_email = CTkEntry(master=atualizar_usuario_pagina_fm, fg_color="#F0F0F0", border_width=0, height=30, width=200)
+    label_nova_email.place(x=50, y=160)
+
+    label_id_usuario = CTkLabel(master=atualizar_usuario_pagina_fm, text='ID do usuário', font=("Bold", 18))
+    label_id_usuario.place(x=290, y=130)
+    entry_id_usuario = CTkEntry(master=atualizar_usuario_pagina_fm, fg_color="#F0F0F0", border_width=0,height=30, width=200)
+    entry_id_usuario.place(x=290, y=160)
+
+    b_atualizar_usuario = CTkButton(master=atualizar_usuario_pagina_fm, command=atualizar_usuario, text='Atualizar usuário', width=180, height=40, font=("Arial Bold", 17), hover_color="#3b3b3b", fg_color="#050505", text_color="#fff")
+    b_atualizar_usuario.place(x=170, y=220)
+
+    controller.add_frame("atualizar_usuario_front", atualizar_usuario_pagina_fm)
+
+def remover_usuario_front():
+
+    def remover_usuario():
+        id_usuario = entry_id_usuario.get()
+        
+        if id_usuario:
+            remover_usuario_por_id(int(id_usuario))
+        else:
+            mostrar_aviso("Por favor, insira o ID do Voluntário.")
+
+    remover_usuario_pagina_fm =  CTkFrame(master=pages_fm, width=550, height=570, fg_color='transparent')
+    remover_usuario_pagina_fm.place(relx=0.5, rely=0.5, anchor="center")
+
+    label_id_usuario = CTkLabel(master=remover_usuario_pagina_fm, text='Insira o ID do usuário', font=("Bold", 25))
+    label_id_usuario.place(x=155, y=200) 
+    entry_id_usuario = CTkEntry(master=remover_usuario_pagina_fm, fg_color="#F0F0F0", border_width=1, border_color="black", width=250)
+    entry_id_usuario.place(x=150, y=250)
+
+    b_remover_usuario = CTkButton(master=remover_usuario_pagina_fm, text="Remover", command=remover_usuario, width=100, font=("Arial Bold", 17), hover_color="#3b3b3b", fg_color="#050505", text_color="#fff")
+    b_remover_usuario.place(x=220, y=300)
+
+    controller.add_frame("remover_usuario_front", remover_usuario_pagina_fm)
 
 
-bf_B = Button(w, text="Cadastrar Usuário", width=40, height=3, command=abrir_n_j_f)
-bf_B.place(x=250, y=150)
+def cadastrar_doacao_front():
 
-bb_B = Button(w, text="Cadastrar voluntario", width=40, height=3, command=abrir_n_j_b)
-bb_B.place(x=250, y=250)
+    global valor_doacao_entry
 
-bp_B = Button(w, text="Cadastrar Doação", width=40, height=3, command=abrir_n_j_p)
-bp_B.place(x=250, y=350)
+    cadastrar_doacao_pagina_fm =  CTkFrame(master=pages_fm, width=550, height=570, fg_color='transparent')
+    cadastrar_doacao_pagina_fm.place(relx=0.5, rely=0.5, anchor="center")
+
+    valor_doacao_label = CTkLabel(master=cadastrar_doacao_pagina_fm, text='Valor da doação', font=("Bold", 25))
+    valor_doacao_label.place(relx=0.5, rely=0.35, anchor="center") 
+
+    valor_doacao_entry = CTkEntry(master=cadastrar_doacao_pagina_fm, fg_color="#F0F0F0", border_width=1, border_color="black", width=250)
+    valor_doacao_entry.place(relx=0.5, rely=0.45, anchor="center")
+
+    bcb_p = CTkButton(master=cadastrar_doacao_pagina_fm, text="Cadastrar", command=cadastrar_doacao, width=120, font=("Arial Bold", 17), hover_color="#3b3b3b", fg_color="#050505", text_color="#fff")
+    bcb_p.place(relx=0.5, rely=0.55, anchor="center")
+    criar_tabela_doacao()
+
+    controller.add_frame("cadastrar_doacao_front", cadastrar_doacao_pagina_fm)
+
+def remover_doacao_front():
+
+    def remover_doacao():
+        id_doacao = entry_id_doacao.get()
+        if id_doacao:
+            remover_doacao_por_id(int(id_doacao))
+        else:
+            mostrar_aviso("Por favor, insira o ID do doacao.")
+
+    remover_doacao_pagina_fm =  CTkFrame(master=pages_fm, width=550, height=570, fg_color='transparent')
+    remover_doacao_pagina_fm.place(relx=0.5, rely=0.5, anchor="center")
+
+    label_id_doacao = CTkLabel(master=remover_doacao_pagina_fm, text='ID da doação', font=("Bold", 25))
+    label_id_doacao.place(relx=0.5, rely=0.35, anchor="center") 
+
+    entry_id_doacao = CTkEntry(master=remover_doacao_pagina_fm, fg_color="#F0F0F0", border_width=1, border_color="black", width=250)
+    entry_id_doacao.place(relx=0.5, rely=0.45, anchor="center")
+
+    b_remover_doacao = CTkButton(master=remover_doacao_pagina_fm, text="Remover",command=remover_doacao, width=120, font=("Arial Bold", 17), hover_color="#3b3b3b", fg_color="#050505", text_color="#fff")
+    b_remover_doacao.place(relx=0.5, rely=0.55, anchor="center")
+
+    controller.add_frame("remover_doacao_front", remover_doacao_pagina_fm)
+
+class Controller:
+    def __init__(self, container):
+        self.container = container
+        self.frames = {}
+
+    def add_frame(self, name, frame):
+        self.frames[name] = frame
+
+    def show_frame(self, frame_name):
+        frame = self.frames.get(frame_name)
+        if frame:
+            frame.tkraise()
+    
+controller = Controller(pages_fm)
+
+cadastrar_voluntario_front()
+remover_voluntario_front()
+cadastrar_usuario_front()
+atualizar_usuario_front()
+cadastrar_doacao_front()
+remover_doacao_front()
+remover_usuario_front()
+pagina_inicial()
+
+controller.show_frame("pagina_inicial")
+
 
 w.mainloop()
